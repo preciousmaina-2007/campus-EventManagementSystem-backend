@@ -9,6 +9,13 @@ class EventSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
+    def validate_capacity(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                "Event capacity must be at least one."
+            )
+        return value
+
     class Meta:
         model = Event
         fields = [

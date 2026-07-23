@@ -9,7 +9,10 @@ class IsOrganizer(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
-            and request.user.role == "ORGANIZER"
+            and request.user.role in {
+                request.user.Role.ORGANIZER,
+                request.user.Role.ADMIN,
+            }
         )
 
 
@@ -24,4 +27,7 @@ class IsOwnerOrReadOnly(BasePermission):
         if request.method in ["GET", "HEAD", "OPTIONS"]:
             return True
 
-        return obj.organizer == request.user
+        return (
+            request.user.role == request.user.Role.ADMIN
+            or obj.organizer == request.user
+        )
