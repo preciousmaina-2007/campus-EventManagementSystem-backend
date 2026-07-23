@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -10,6 +11,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     Serializer for user registration.
     Default role is STUDENT; organizer accounts created via admin.
     """
+
+    password = serializers.CharField(
+        write_only=True,
+        validators=[validate_password],
+    )
 
     class Meta:
         model = User
